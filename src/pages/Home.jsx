@@ -20,6 +20,11 @@ const Home = () => {
     setLocation("");
   };
 
+  const handleSearch = (query) => {
+    setSearch(query);
+    setPage(1);
+  }
+
   useEffect(() => {
     const getEventList = async () => {
       try {
@@ -45,7 +50,7 @@ const Home = () => {
       <Navbar />
       <Filter
         search={search}
-        setSearch={setSearch}
+        setSearch={handleSearch}
         category={category}
         setCategory={setCategory}
         location={location}
