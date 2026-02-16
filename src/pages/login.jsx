@@ -8,14 +8,18 @@ import { toastError, toastSuccess } from "../utils/toast"
 
 const Login = () => {
   const navigate = useNavigate()
-  const { login } = useContext(AuthContext)
+  const { login, user } = useContext(AuthContext)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
 
-
+  if (user){
+    return <Navigate to='/' replace />
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setLoading(true)
 
     try {
 
@@ -39,6 +43,8 @@ const Login = () => {
       }
     } catch (error) {
       console.error("Login Form Error: ", error)
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -58,7 +64,7 @@ const Login = () => {
             <input type="password" onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="flex-1 h-full font-sans font-medium outline-none" required minLength={6} />
           </div>
           <div className="w-4/5 h-12 flex justify-center gap-5 items-center m-auto bg-green-400 text-white rounded-2xl mb-4">
-            <button type="submit" className="h-full w-full font-medium font-sans cursor-pointer">Login</button>
+            <button type="submit" className="h-full w-full font-medium font-sans cursor-pointer" disabled={loading}>{loading ? 'Logging In...' : 'Login'}</button>
           </div>
 
         </form>

@@ -1,12 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { FiCalendar, FiMapPin, FiTag, FiUser, FiUsers } from 'react-icons/fi'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { AuthContext } from '../context/authContext'
 import { toastInfo, toastSuccess } from '../utils/toast'
 
 const EventCard = ({ event, showButton = false, availableSeats = false }) => {
   const navigate = useNavigate()
   const { user, token } = useContext(AuthContext)
+  const [loading, setLoading] = useState(false)
   const formattedDate = event?.date
     ? new Date(event.date).toLocaleString('en-IN', {
       day: 'numeric',
@@ -18,6 +19,7 @@ const EventCard = ({ event, showButton = false, availableSeats = false }) => {
     : 'Date TBA'
 
   const handleRegister = async () => {
+    setLoading(true)
     try {
       const option = {
         method: 'POST',
@@ -37,6 +39,8 @@ const EventCard = ({ event, showButton = false, availableSeats = false }) => {
       }
     } catch (error) {
       console.error('Registration Error: ', error)
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -93,8 +97,8 @@ const EventCard = ({ event, showButton = false, availableSeats = false }) => {
             <div className='my-4 self-end'>
               {user && showButton ? (
                 availableSeats && availableSeats > 0 ? (
-                  <button onClick={handleRegister} className="bg-blue-500 text-white p-2 rounded-sm cursor-pointer">
-                    Register Now
+                  <button onClick={handleRegister} className="bg-blue-500 text-white p-2 rounded-sm cursor-pointer" disabled={loading}>
+                    {loading ? 'Processing...' : 'Register Now'}
                   </button>
                 ) : (
                   <p className="text-red-500">Sold Out</p>
